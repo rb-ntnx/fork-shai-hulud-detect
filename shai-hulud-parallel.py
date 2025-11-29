@@ -496,13 +496,16 @@ Examples:
         print(f"Error: '{args.directory}' is not a directory", file=sys.stderr)
         sys.exit(1)
 
-    # Find scanner script
-    script_dir = Path(__file__).parent
-    scanner_script = script_dir / ("shai-hulud-slim.sh" if args.slim else "shai-hulud-detector.sh")
+    # Find scanner script (use absolute path for subprocess)
+    script_dir = Path(__file__).parent.resolve()
+    scanner_script = (script_dir / ("shai-hulud-slim.sh" if args.slim else "shai-hulud-detector.sh")).resolve()
 
     if not scanner_script.exists():
         print(f"Error: Scanner script not found: {scanner_script}", file=sys.stderr)
         sys.exit(1)
+
+    if args.verbose:
+        print(f"🔧 Using scanner: {scanner_script}")
 
     # Find projects
     print(f"🔍 Discovering projects in {args.directory}...")
